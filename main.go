@@ -50,11 +50,26 @@ func handleGetProduct(w http.ResponseWriter, req *http.Request) {
 		log.Println("User Logged In")
 	}
 
+	go sendNotifEmail(ctx)
+	go sendNotifSms(ctx)
+
 	// Get Product
 	product := getProduct(ctx)
 	log.Println("Product: ", product)
 
 	fmt.Fprint(w, "Product: ", product)
+}
+
+func sendNotifEmail(ctx context.Context) {
+	trace, ctx := opentracing.StartSpanFromContext(ctx, "func sendNotifEmail")
+	time.Sleep(2000 * time.Millisecond)
+	defer trace.Finish()
+}
+
+func sendNotifSms(ctx context.Context) {
+	trace, ctx := opentracing.StartSpanFromContext(ctx, "func sendNotifSms")
+	time.Sleep(1000 * time.Millisecond)
+	defer trace.Finish()
 }
 
 func isLogin(ctx context.Context) bool {
@@ -66,7 +81,7 @@ func isLogin(ctx context.Context) bool {
 }
 
 func getProduct(ctx context.Context) map[string]string {
-	trace, ctx := opentracing.StartSpanFromContext(ctx, "func isLogin")
+	trace, ctx := opentracing.StartSpanFromContext(ctx, "func getProduct")
 	time.Sleep(750 * time.Millisecond)
 	defer trace.Finish()
 
